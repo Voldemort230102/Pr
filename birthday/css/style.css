@@ -1,0 +1,687 @@
+/* ====================================================
+   星空主题生日网站 - 完整样式
+   融合 Pr 镨元素 + 斯内普守护神 + 星空梦幻
+   ==================================================== */
+
+/* === 重置 === */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #000;
+}
+
+/* === 字体（本地 woff2，回退系统字体） === */
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url('../fonts/SpaceGrotesk-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Space Grotesk';
+    src: url('../fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Noto Serif SC';
+    src: url('../fonts/NotoSerifSC-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Noto Serif SC';
+    src: url('../fonts/NotoSerifSC-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-display: swap;
+}
+
+/* === 设计令牌 === */
+:root {
+    /* 背景色 */
+    --bg-deep:        #020d1a;
+    --bg-mid:         #0a1a2c;
+    --bg-black:       #000000;
+
+    /* 星云色 */
+    --nebula-purple:  rgba(100, 50, 255, 0.20);
+    --nebula-pink:    rgba(255, 100, 200, 0.10);
+    --nebula-blue:    rgba(0, 150, 255, 0.12);
+
+    /* 强调色 */
+    --accent-gold:    #ffd700;
+    --accent-rose:    #ff69b4;
+    --accent-sky:     #87ceeb;
+
+    /* 斯内普 / 镨主题色：银 + 绿 */
+    --silver:         #c0c8d8;
+    --silver-light:   #e8e8f0;
+    --silver-glow:    rgba(192, 200, 216, 0.6);
+    --pr-green:       #5a9a6a;
+    --pr-green-bright:#7dffb0;
+    --pr-green-glow:  rgba(125, 255, 176, 0.4);
+    --slytherin:      #1a472a;
+
+    /* 文字色 */
+    --text-primary:   rgba(255, 255, 255, 0.95);
+    --text-secondary: rgba(255, 255, 255, 0.70);
+    --text-muted:     rgba(255, 255, 255, 0.40);
+
+    /* 字体 */
+    --font-display:   'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+    --font-body-cn:   'Noto Serif SC', 'PingFang SC', 'Microsoft YaHei', serif;
+    --font-number:    'Space Grotesk', 'Segoe UI', system-ui, sans-serif;
+
+    /* Glassmorphism */
+    --glass-bg:       rgba(255, 255, 255, 0.08);
+    --glass-border:   rgba(255, 255, 255, 0.15);
+    --glass-blur:     12px;
+    --glass-radius:   16px;
+
+    /* 倒计时数字大小 */
+    --countdown-size: clamp(2.5rem, 10vw, 5.5rem);
+}
+
+/* === 星空背景（多层径向渐变） === */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    background:
+        radial-gradient(ellipse at 20% 50%, var(--nebula-purple) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, var(--nebula-pink) 0%, transparent 40%),
+        radial-gradient(ellipse at 50% 80%, var(--nebula-blue) 0%, transparent 45%),
+        linear-gradient(to bottom, var(--bg-deep) 0%, var(--bg-mid) 50%, var(--bg-black) 100%);
+    pointer-events: none;
+}
+
+/* === Canvas 层 === */
+#canvas-bg, #canvas-fx {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#canvas-bg { z-index: 1; }
+#canvas-fx { z-index: 2; }
+
+/* === 星星层 === */
+.stars-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.stars-small, .stars-medium, .stars-large {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    border-radius: 50%;
+    background: transparent;
+    /* box-shadow 由 stars.js 注入 */
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50%      { opacity: 1; }
+}
+
+.stars-small  { animation: twinkle 4s ease-in-out infinite; }
+.stars-medium { animation: twinkle 3s ease-in-out infinite; animation-delay: -1.5s; }
+.stars-large  { animation: twinkle 2.5s ease-in-out infinite; animation-delay: -0.8s; }
+
+/* Phase 2 加速闪烁 */
+.twinkle-fast .stars-small  { animation-duration: 0.8s; }
+.twinkle-fast .stars-medium { animation-duration: 0.6s; }
+.twinkle-fast .stars-large  { animation-duration: 0.5s; }
+
+/* === 星云覆盖层（Phase 2 提亮） === */
+.nebula-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0;
+    background:
+        radial-gradient(ellipse at 50% 50%, var(--nebula-purple) 0%, transparent 60%),
+        radial-gradient(ellipse at 30% 70%, var(--pr-green-glow) 0%, transparent 40%);
+    transition: opacity 1.5s ease;
+}
+
+.nebula-overlay.brighten { opacity: 0.8; }
+
+/* === Phase 容器通用 === */
+.phase {
+    position: fixed;
+    inset: 0;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 2rem);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.phase.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.phase.fade-out {
+    opacity: 0;
+    transform: scale(0.8);
+    visibility: hidden;
+}
+
+/* ====================================================
+   Pr 镨 元素卡片（周期表风格）
+   ==================================================== */
+.element-card {
+    position: relative;
+    width: clamp(140px, 38vw, 200px);
+    background: linear-gradient(135deg,
+        rgba(90, 154, 106, 0.18) 0%,
+        rgba(192, 200, 216, 0.12) 50%,
+        rgba(10, 26, 44, 0.7) 100%);
+    border: 1.5px solid var(--silver-glow);
+    border-radius: 12px;
+    padding: clamp(10px, 2.5vw, 16px);
+    margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+    text-align: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-shadow:
+        0 0 20px rgba(192, 200, 216, 0.15),
+        inset 0 0 15px rgba(125, 255, 176, 0.05);
+    animation: element-breathe 4s ease-in-out infinite;
+}
+
+@keyframes element-breathe {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(192, 200, 216, 0.15), inset 0 0 15px rgba(125, 255, 176, 0.05);
+    }
+    50% {
+        box-shadow: 0 0 35px rgba(125, 255, 176, 0.3), inset 0 0 20px rgba(125, 255, 176, 0.1);
+    }
+}
+
+.element-card .element-number {
+    font-family: var(--font-number);
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    color: var(--silver);
+    text-align: left;
+    letter-spacing: 1px;
+}
+
+.element-card .element-symbol {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 9vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--silver-light), var(--pr-green-bright), var(--silver));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px var(--pr-green-glow));
+    margin: 2px 0;
+}
+
+.element-card .element-cn {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.95rem, 3vw, 1.15rem);
+    color: var(--silver-light);
+    letter-spacing: 4px;
+}
+
+.element-card .element-en {
+    font-family: var(--font-number);
+    font-size: clamp(0.6rem, 1.8vw, 0.72rem);
+    color: var(--text-secondary);
+    text-transform: lowercase;
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+}
+
+.element-card .element-weight {
+    font-family: var(--font-number);
+    font-size: clamp(0.6rem, 1.8vw, 0.72rem);
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.element-card .element-hint {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.65rem, 2vw, 0.78rem);
+    color: var(--pr-green-bright);
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(192, 200, 216, 0.2);
+    letter-spacing: 1px;
+    opacity: 0.85;
+}
+
+/* Phase 3 中的小卡片 */
+.element-card-small {
+    width: clamp(100px, 26vw, 130px);
+    margin-bottom: 1rem;
+    padding: 10px;
+}
+
+.element-card-small .element-symbol {
+    font-size: clamp(1.8rem, 6vw, 2.4rem);
+}
+
+.element-card-small .element-hint {
+    display: none;
+}
+
+/* ====================================================
+   Phase 1: 倒计时
+   ==================================================== */
+.countdown-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 600px;
+}
+
+.countdown-label {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.875rem, 3vw, 1.1rem);
+    color: var(--text-secondary);
+    letter-spacing: 6px;
+    margin-bottom: clamp(1rem, 3vw, 1.8rem);
+    text-align: center;
+}
+
+.countdown-timer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: clamp(4px, 1.5vw, 12px);
+    flex-wrap: nowrap;
+}
+
+.time-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: clamp(48px, 16vw, 90px);
+}
+
+.time-number {
+    font-family: var(--font-number);
+    font-size: var(--countdown-size);
+    font-weight: 700;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-rose) 50%, var(--accent-sky) 100%);
+    background-size: 200% 200%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradient-flow 4s ease infinite;
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.4));
+}
+
+@keyframes gradient-flow {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.time-unit {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.7rem, 2.2vw, 0.9rem);
+    color: var(--text-muted);
+    margin-top: 4px;
+    letter-spacing: 2px;
+}
+
+.time-separator {
+    font-family: var(--font-number);
+    font-size: clamp(1.5rem, 5vw, 2.8rem);
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1;
+    align-self: center;
+    margin-top: clamp(-6px, -1vw, -2px);
+}
+
+.countdown-date {
+    font-family: var(--font-number);
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    color: var(--text-muted);
+    letter-spacing: 4px;
+    margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* ====================================================
+   银色牝鹿守护神（斯内普的守护神）
+   ==================================================== */
+.patronus-wrap {
+    margin-top: clamp(2rem, 6vw, 3rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    opacity: 1;
+}
+
+.patronus-doe {
+    width: clamp(140px, 36vw, 220px);
+    height: auto;
+    border-radius: 12px;
+    filter: brightness(0.9) drop-shadow(0 0 22px var(--silver-glow)) drop-shadow(0 0 12px rgba(125, 255, 176, 0.3));
+    animation: patronus-float 6s ease-in-out infinite;
+    /* 让图片融入深色背景 */
+    mix-blend-mode: screen;
+    opacity: 1;
+}
+
+@keyframes patronus-float {
+    0%, 100% { transform: translateY(0) scale(1); opacity: 0.95; }
+    50%      { transform: translateY(-8px) scale(1.03); opacity: 1; }
+}
+
+.patronus-label {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.7rem, 2vw, 0.85rem);
+    color: var(--silver);
+    letter-spacing: 3px;
+    margin-top: 8px;
+    opacity: 0.8;
+}
+
+/* === 斯内普名言 === */
+.snape-quote {
+    font-family: var(--font-display);
+    font-size: clamp(0.75rem, 2.4vw, 0.95rem);
+    color: var(--silver-light);
+    font-style: italic;
+    margin-top: clamp(1.5rem, 4vw, 2rem);
+    text-align: center;
+    letter-spacing: 1px;
+    opacity: 0.75;
+    line-height: 1.6;
+}
+
+/* ====================================================
+   Phase 2: 揭晓过渡
+   ==================================================== */
+.reveal-content {
+    text-align: center;
+}
+
+.reveal-title-en {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 9vw, 5rem);
+    font-weight: 700;
+    color: var(--accent-gold);
+    opacity: 0;
+    transform: translateY(30px);
+    text-shadow:
+        0 0 20px var(--accent-gold),
+        0 0 40px rgba(255, 215, 0, 0.5),
+        0 0 60px rgba(255, 215, 0, 0.3);
+    letter-spacing: 2px;
+}
+
+.reveal-title-en.animate-in {
+    animation: title-rise 0.8s ease-out forwards;
+}
+
+.reveal-title-cn {
+    font-family: var(--font-body-cn);
+    font-size: clamp(1.6rem, 7vw, 3.5rem);
+    font-weight: 400;
+    color: var(--accent-rose);
+    margin-top: 12px;
+    opacity: 0;
+    transform: translateY(20px);
+    text-shadow:
+        0 0 15px var(--accent-rose),
+        0 0 30px rgba(255, 105, 180, 0.4);
+    letter-spacing: 8px;
+}
+
+.reveal-title-cn.animate-in {
+    animation: title-rise 0.6s ease-out 0.2s forwards;
+}
+
+.reveal-always {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1rem, 4vw, 1.5rem);
+    color: var(--silver-light);
+    margin-top: 24px;
+    opacity: 0;
+    letter-spacing: 3px;
+    text-shadow: 0 0 20px var(--silver-glow);
+}
+
+.reveal-always.animate-in {
+    animation: title-rise 1s ease-out 0.5s forwards;
+}
+
+@keyframes title-rise {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ====================================================
+   Phase 3: 庆祝页面
+   ==================================================== */
+#phase-celebration {
+    justify-content: flex-start;
+    padding-top: clamp(2rem, 6vh, 3rem);
+}
+
+.celebration-header {
+    text-align: center;
+    margin-bottom: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.celeb-title-en {
+    font-family: var(--font-display);
+    font-size: clamp(1.8rem, 7vw, 3.5rem);
+    font-weight: 700;
+    color: var(--accent-gold);
+    text-shadow:
+        0 0 15px var(--accent-gold),
+        0 0 30px rgba(255, 215, 0, 0.4);
+    letter-spacing: 2px;
+}
+
+.celeb-title-cn {
+    font-family: var(--font-body-cn);
+    font-size: clamp(1.3rem, 5vw, 2.4rem);
+    font-weight: 400;
+    color: var(--accent-rose);
+    margin-top: 8px;
+    text-shadow: 0 0 12px var(--accent-rose);
+    letter-spacing: 6px;
+}
+
+/* === Glassmorphism 祝福卡片 === */
+.blessings-container {
+    width: 100%;
+    max-width: 480px;
+    margin: 0 auto;
+}
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(var(--glass-blur));
+    -webkit-backdrop-filter: blur(var(--glass-blur));
+    border: 1px solid var(--glass-border);
+    border-radius: var(--glass-radius);
+    padding: clamp(1.2rem, 4vw, 1.8rem);
+    max-height: 45vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+@supports not (backdrop-filter: blur(1px)) {
+    .glass-card {
+        background: rgba(10, 26, 44, 0.85);
+    }
+}
+
+.blessing-text {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.95rem, 3.2vw, 1.1rem);
+    line-height: 2;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fade-in-up 0.8s ease forwards;
+}
+
+.blessing-text:nth-child(1) { animation-delay: 0.3s; }
+.blessing-text:nth-child(2) { animation-delay: 0.9s; }
+.blessing-text:nth-child(3) { animation-delay: 1.5s; }
+
+.blessing-text:last-of-type {
+    margin-bottom: 0;
+}
+
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.blessing-always {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.2rem, 4vw, 1.6rem);
+    color: var(--silver-light);
+    text-align: center;
+    margin-top: 1.2rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(192, 200, 216, 0.2);
+    letter-spacing: 4px;
+    text-shadow: 0 0 15px var(--silver-glow);
+    opacity: 0;
+    animation: fade-in-up 0.8s ease 2.1s forwards;
+}
+
+/* === 底部 === */
+.celebration-footer {
+    text-align: center;
+    margin-top: auto;
+    padding-top: clamp(1.5rem, 4vh, 2rem);
+    padding-bottom: clamp(1rem, 3vh, 1.5rem);
+}
+
+.footer-hint {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.7rem, 2.2vw, 0.85rem);
+    color: var(--text-muted);
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+.firework-btn {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.85rem, 2.8vw, 1rem);
+    color: var(--accent-gold);
+    background: rgba(255, 215, 0, 0.08);
+    border: 1px solid rgba(255, 215, 0, 0.4);
+    border-radius: 24px;
+    padding: 10px 28px;
+    cursor: pointer;
+    letter-spacing: 3px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.firework-btn:hover, .firework-btn:active {
+    background: rgba(255, 215, 0, 0.18);
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.4);
+    transform: scale(1.05);
+}
+
+.firework-btn:focus-visible {
+    outline: 2px solid var(--accent-gold);
+    outline-offset: 4px;
+}
+
+.footer-date {
+    font-family: var(--font-number);
+    font-size: clamp(0.75rem, 2.3vw, 0.9rem);
+    color: var(--text-muted);
+    margin-top: 12px;
+    letter-spacing: 4px;
+}
+
+/* ====================================================
+   响应式
+   ==================================================== */
+@media (min-width: 768px) {
+    :root {
+        --glass-blur: 16px;
+        --glass-radius: 24px;
+    }
+    .blessings-container { max-width: 520px; }
+}
+
+@media (min-width: 1024px) {
+    .blessings-container { max-width: 560px; }
+}
+
+/* 横屏手机 */
+@media (orientation: landscape) and (max-height: 500px) {
+    :root {
+        --countdown-size: clamp(1.8rem, 7vh, 3rem);
+    }
+    .countdown-timer { gap: 6px; }
+    .countdown-label { margin-bottom: 0.8rem; }
+    .patronus-wrap { margin-top: 1rem; }
+    .patronus-doe { width: 70px; }
+    #phase-celebration {
+        padding-top: 1rem;
+    }
+    .glass-card {
+        max-height: 55vh;
+    }
+}
+
+/* === 无障碍：减弱动画 === */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

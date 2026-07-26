@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#020d1a">
+    <title>For You · 2026.11.29</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 双 Canvas 分层 -->
+    <canvas id="canvas-bg" aria-hidden="true"></canvas>
+    <canvas id="canvas-fx" aria-hidden="true"></canvas>
+
+    <!-- 星空层（由 stars.js 注入 box-shadow） -->
+    <div class="stars-layer" aria-hidden="true">
+        <div class="stars-small"></div>
+        <div class="stars-medium"></div>
+        <div class="stars-large"></div>
+    </div>
+
+    <!-- 星云亮度覆盖层（Phase 2 提亮用） -->
+    <div class="nebula-overlay" aria-hidden="true"></div>
+
+    <!-- ============ Phase 1: 倒计时 ============ -->
+    <div id="phase-countdown" class="phase active" role="region" aria-label="生日倒计时">
+        <div class="countdown-container">
+            <!-- Pr 镨 元素卡片（周期表风格） -->
+            <div class="element-card" aria-label="元素 镨 praseodymium">
+                <div class="element-number">59</div>
+                <div class="element-symbol">Pr</div>
+                <div class="element-cn">镨</div>
+                <div class="element-en">praseodymium</div>
+                <div class="element-weight">140.91</div>
+                <div class="element-hint">绿色的盐 · 恰如你的眼眸</div>
+            </div>
+
+            <p class="countdown-label">距离你的生日还有</p>
+            <div class="countdown-timer">
+                <div class="time-block">
+                    <span id="cd-days" class="time-number">000</span>
+                    <span class="time-unit">天</span>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-block">
+                    <span id="cd-hours" class="time-number">00</span>
+                    <span class="time-unit">时</span>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-block">
+                    <span id="cd-minutes" class="time-number">00</span>
+                    <span class="time-unit">分</span>
+                </div>
+                <div class="time-separator">:</div>
+                <div class="time-block">
+                    <span id="cd-seconds" class="time-number">00</span>
+                    <span class="time-unit">秒</span>
+                </div>
+            </div>
+            <p class="countdown-date">2026.11.29</p>
+
+            <!-- 银色牝鹿守护神（斯内普的守护神） -->
+            <div class="patronus-wrap" aria-hidden="true">
+                <img class="patronus-doe" src="assets/patronus-doe.jpeg" alt="银色牝鹿守护神">
+                <p class="patronus-label">守护神 · 牝鹿</p>
+            </div>
+
+            <p class="snape-quote">"After all this time?" &mdash; "Always."</p>
+        </div>
+    </div>
+
+    <!-- ============ Phase 2: 揭晓过渡 ============ -->
+    <div id="phase-reveal" class="phase" role="region" aria-label="生日揭晓">
+        <div class="reveal-content">
+            <h1 class="reveal-title-en">Happy Birthday</h1>
+            <h2 class="reveal-title-cn">生日快乐</h2>
+            <p class="reveal-always">Always.</p>
+        </div>
+    </div>
+
+    <!-- ============ Phase 3: 庆祝页面 ============ -->
+    <div id="phase-celebration" class="phase" role="region" aria-label="生日祝福">
+        <header class="celebration-header">
+            <div class="element-card element-card-small">
+                <div class="element-number">59</div>
+                <div class="element-symbol">Pr</div>
+                <div class="element-cn">镨</div>
+                <div class="element-en">praseodymium</div>
+            </div>
+            <h1 class="celeb-title-en">Happy Birthday</h1>
+            <h2 class="celeb-title-cn">生日快乐</h2>
+        </header>
+
+        <section class="blessings-container">
+            <div class="glass-card">
+                <p class="blessing-text">
+                    在这个宇宙里，有无数颗星星在闪烁，但在我眼中，最亮的那一颗，始终是你。今天是属于你的日子，我想把整片星空都送给你。
+                </p>
+                <p class="blessing-text">
+                    谢谢你出现在我的世界里，让平凡的每一天都变得闪闪发光。愿你被这个世界温柔以待，愿你眼里有光，心中有爱，笑容永远灿烂。不管未来有多远，我都想陪你一起走过。
+                </p>
+                <p class="blessing-text">
+                    生日快乐，我最特别的那颗星。新的一岁，愿你万事胜意，平安喜乐，每一天都值得期待。我会一直在你身边。
+                </p>
+                <p class="blessing-always">Always.</p>
+            </div>
+        </section>
+
+        <footer class="celebration-footer">
+            <p class="footer-hint">点击屏幕任意位置放烟花</p>
+            <button class="firework-btn" id="btn-firework-all">满屏烟花</button>
+            <p class="footer-date">2026.11.29</p>
+        </footer>
+    </div>
+
+    <!-- 脚本（顺序加载） -->
+    <script src="js/stars.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/canvas.js"></script>
+    <script src="js/transition.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
