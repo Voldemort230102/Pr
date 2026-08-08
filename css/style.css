@@ -20,28 +20,28 @@ html, body {
 /* === 字体（本地 woff2，回退系统字体） === */
 @font-face {
     font-family: 'Space Grotesk';
-    src: url('../fonts/SpaceGrotesk-Regular.woff2') format('woff2');
+    src: url('https://livefile.xesimg.com/programme/python_assets/e597e7eaee5120a3107bffcddbea9e05.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Space Grotesk';
-    src: url('../fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+    src: url('https://livefile.xesimg.com/programme/python_assets/514360ed1b78e71aabe58ecd08f36706.woff2') format('woff2');
     font-weight: 700;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Noto Serif SC';
-    src: url('../fonts/NotoSerifSC-Regular.woff2') format('woff2');
+    src: url('https://livefile.xesimg.com/programme/python_assets/f29157434cbf83f5c2a75bf37bd76e02.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Noto Serif SC';
-    src: url('../fonts/NotoSerifSC-Bold.woff2') format('woff2');
+    src: url('https://livefile.xesimg.com/programme/python_assets/9d9059651c4825ddf976a255603a7297.woff2') format('woff2');
     font-weight: 700;
     font-display: swap;
 }
