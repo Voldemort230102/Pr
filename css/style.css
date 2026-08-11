@@ -20,28 +20,28 @@ html, body {
 /* === 字体（本地 woff2，回退系统字体） === */
 @font-face {
     font-family: 'Space Grotesk';
-    src: url('https://livefile.xesimg.com/programme/python_assets/e597e7eaee5120a3107bffcddbea9e05.woff2') format('woff2');
+    src: url('../fonts/SpaceGrotesk-Regular.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Space Grotesk';
-    src: url('https://livefile.xesimg.com/programme/python_assets/514360ed1b78e71aabe58ecd08f36706.woff2') format('woff2');
+    src: url('../fonts/SpaceGrotesk-Bold.woff2') format('woff2');
     font-weight: 700;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Noto Serif SC';
-    src: url('https://livefile.xesimg.com/programme/python_assets/f29157434cbf83f5c2a75bf37bd76e02.woff2') format('woff2');
+    src: url('../fonts/NotoSerifSC-Regular.woff2') format('woff2');
     font-weight: 400;
     font-display: swap;
 }
 
 @font-face {
     font-family: 'Noto Serif SC';
-    src: url('https://livefile.xesimg.com/programme/python_assets/9d9059651c4825ddf976a255603a7297.woff2') format('woff2');
+    src: url('../fonts/NotoSerifSC-Bold.woff2') format('woff2');
     font-weight: 700;
     font-display: swap;
 }
@@ -304,6 +304,39 @@ body::before {
     align-items: center;
     width: 100%;
     max-width: 600px;
+    max-height: 100%;
+    gap: clamp(1.2rem, 3vh, 2rem);
+    padding: clamp(1rem, 3vh, 2rem) 0;
+    margin: auto 0;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+#phase-countdown {
+    justify-content: flex-start;
+}
+
+.countdown-container .patronus-wrap,
+.countdown-container .snape-quote,
+.countdown-container .countdown-date {
+    margin-top: 0;
+}
+
+.countdown-main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(1rem, 3vh, 1.8rem);
+}
+
+.countdown-main .element-card {
+    margin-bottom: 0;
+}
+
+.countdown-timer-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .countdown-label {
@@ -374,6 +407,72 @@ body::before {
     color: var(--text-muted);
     letter-spacing: 4px;
     margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+/* ====================================================
+   进度条
+   ==================================================== */
+.progress-wrap {
+    width: 100%;
+    max-width: 420px;
+}
+
+.progress-bar {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.progress-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    background: linear-gradient(90deg, var(--pr-green), var(--pr-green-bright), var(--accent-sky));
+    border-radius: 5px;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 12px var(--pr-green-glow);
+}
+
+.progress-shimmer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.08) 30%,
+        rgba(255, 255, 255, 0.25) 50%,
+        rgba(255, 255, 255, 0.08) 70%,
+        transparent 100%
+    );
+    animation: shimmer-sweep 2.2s ease-in-out infinite;
+    pointer-events: none;
+    border-radius: 5px;
+}
+
+@keyframes shimmer-sweep {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+.progress-text {
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.progress-number {
+    font-family: var(--font-number);
+    font-size: clamp(0.75rem, 2.1vw, 0.9rem);
+    color: var(--pr-green-bright);
+    letter-spacing: 2px;
+    text-shadow: 0 0 8px var(--pr-green-glow);
 }
 
 /* ====================================================
@@ -674,6 +773,160 @@ body::before {
     }
     .glass-card {
         max-height: 55vh;
+    }
+}
+
+/* ====================================================
+   竖屏 Pad 适配（约 1200×2000 竖屏）
+   ==================================================== */
+@media (min-width: 768px) and (orientation: portrait) {
+    :root {
+        --countdown-size: clamp(3.5rem, 10vw, 5.5rem);
+    }
+
+    .countdown-container {
+        max-width: 720px;
+        gap: clamp(1.5rem, 3vh, 2.5rem);
+        padding: clamp(1.5rem, 3vh, 2.5rem) 0;
+    }
+
+    .element-card {
+        width: clamp(180px, 35vw, 260px);
+        padding: clamp(14px, 2.5vw, 20px);
+    }
+
+    .element-card .element-symbol {
+        font-size: clamp(3rem, 9vw, 4.5rem);
+    }
+
+    .countdown-label {
+        font-size: clamp(1rem, 3vw, 1.25rem);
+    }
+
+    .progress-wrap {
+        max-width: 520px;
+    }
+
+    .patronus-doe {
+        width: clamp(180px, 38vw, 300px);
+    }
+
+    .snape-quote {
+        font-size: clamp(0.9rem, 2.6vw, 1.1rem);
+    }
+
+    .countdown-date {
+        font-size: clamp(0.9rem, 2.5vw, 1.05rem);
+    }
+}
+
+/* ====================================================
+   大屏横屏 Pad 适配（约 2000×1200 横屏）
+   ==================================================== */
+@media (min-width: 1600px) and (orientation: landscape) {
+    :root {
+        --countdown-size: clamp(4rem, 7vw, 6.5rem);
+    }
+
+    .phase {
+        padding: clamp(1.5rem, 4vh, 3rem);
+    }
+
+    .countdown-container {
+        max-width: 1100px;
+        gap: clamp(1.5rem, 3.5vh, 2.5rem);
+        padding: clamp(1.5rem, 4vh, 3rem) 0;
+    }
+
+    .countdown-main {
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(2rem, 5vw, 5rem);
+        width: 100%;
+    }
+
+    .element-card {
+        width: clamp(180px, 18vw, 260px);
+        margin-bottom: 0;
+        padding: clamp(14px, 1.8vw, 24px);
+        border-radius: 16px;
+    }
+
+    .element-card .element-symbol {
+        font-size: clamp(3rem, 6vw, 5rem);
+    }
+
+    .element-card .element-cn {
+        font-size: clamp(1.1rem, 2.4vw, 1.5rem);
+    }
+
+    .element-card .element-hint {
+        font-size: clamp(0.75rem, 1.4vw, 0.9rem);
+    }
+
+    .countdown-label {
+        font-size: clamp(1rem, 2vw, 1.35rem);
+        margin-bottom: clamp(1rem, 2.5vh, 1.5rem);
+    }
+
+    .countdown-timer {
+        gap: clamp(8px, 1.2vw, 16px);
+    }
+
+    .time-block {
+        min-width: clamp(80px, 10vw, 130px);
+    }
+
+    .time-unit {
+        font-size: clamp(0.8rem, 1.6vw, 1rem);
+    }
+
+    .time-separator {
+        font-size: clamp(2rem, 4vw, 3.5rem);
+    }
+
+    .progress-wrap {
+        max-width: 720px;
+    }
+
+    .progress-bar {
+        height: 12px;
+        border-radius: 6px;
+    }
+
+    .progress-fill,
+    .progress-shimmer {
+        border-radius: 6px;
+    }
+
+    .progress-text {
+        margin-bottom: 12px;
+    }
+
+    .progress-number {
+        font-size: clamp(0.85rem, 1.6vw, 1rem);
+    }
+
+    .patronus-wrap {
+        margin-top: 0;
+    }
+
+    .patronus-doe {
+        width: clamp(180px, 22vw, 320px);
+        border-radius: 16px;
+    }
+
+    .patronus-label {
+        font-size: clamp(0.85rem, 1.6vw, 1rem);
+    }
+
+    .snape-quote {
+        font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+    }
+
+    .countdown-date {
+        font-size: clamp(0.95rem, 1.8vw, 1.15rem);
     }
 }
 

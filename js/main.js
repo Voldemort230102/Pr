@@ -14,11 +14,18 @@
     const TARGET = new Date(BIRTHDAY_YEAR, BIRTHDAY_MONTH, BIRTHDAY_DAY, 0, 0, 0).getTime();
     const FADE_OUT_DELAY = 4000; // 归零后 4 秒淡出
 
+    // ===== 进度条配置 =====
+    const PROGRESS_START = new Date(2026, 4, 26, 12, 0, 0).getTime();
+    const PROGRESS_END = TARGET;
+    const PROGRESS_TOTAL = PROGRESS_END - PROGRESS_START;
+
     // ===== DOM =====
     const cdDays = document.getElementById('cd-days');
     const cdHours = document.getElementById('cd-hours');
     const cdMinutes = document.getElementById('cd-minutes');
     const cdSeconds = document.getElementById('cd-seconds');
+    const progressFill = document.getElementById('progress-fill');
+    const progressValue = document.getElementById('progress-value');
 
     // ===== 显示全零 =====
     function setAllZeros() {
@@ -38,6 +45,21 @@
         cdHours.textContent = String(hours).padStart(2, '0');
         cdMinutes.textContent = String(minutes).padStart(2, '0');
         cdSeconds.textContent = String(seconds).padStart(2, '0');
+    }
+
+    // ===== 更新进度条 =====
+    function updateProgress() {
+        const now = Date.now();
+        let pct;
+        if (now <= PROGRESS_START) {
+            pct = 0;
+        } else if (now >= PROGRESS_END) {
+            pct = 100;
+        } else {
+            pct = ((now - PROGRESS_START) / PROGRESS_TOTAL) * 100;
+        }
+        progressFill.style.width = pct + '%';
+        progressValue.textContent = pct.toFixed(6) + '%';
     }
 
     // ===== 倒计时主逻辑 =====
@@ -74,11 +96,14 @@
 
         // 正常倒计时
         updateDisplay(TARGET - Date.now());
+        updateProgress();
         const timer = setInterval(function tick() {
             const diff = TARGET - Date.now();
             if (diff <= 0) {
                 clearInterval(timer);
+                clearInterval(progressTimer);
                 setAllZeros();
+                updateProgress();
                 setTimeout(() => {
                     if (window.Transition) window.Transition.playTransition();
                 }, FADE_OUT_DELAY);
@@ -86,6 +111,17 @@
             }
             updateDisplay(diff);
         }, 1000);
+
+        // 进度条独立更新（50ms 刷新，确保 0.000001% 精度跳动可见）
+        const progressTimer = setInterval(function progressTick() {
+            const diff = TARGET - Date.now();
+            if (diff <= 0) {
+                clearInterval(progressTimer);
+                updateProgress();
+                return;
+            }
+            updateProgress();
+        }, 50);
     }
 
     // ===== 交互事件 =====
