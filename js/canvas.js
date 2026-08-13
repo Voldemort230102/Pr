@@ -219,12 +219,12 @@
 
     // ===== 满屏烟花 =====
     function fireworksShow() {
-        for (let i = 0; i < 8; i++) {
+        for (let i = 0; i < 100; i++) {
             setTimeout(() => {
                 const tx = window.innerWidth * (0.1 + Math.random() * 0.8);
                 const ty = window.innerHeight * (0.1 + Math.random() * 0.4);
                 launchFirework(tx, ty);
-            }, i * 300);
+            }, i * 100);
         }
     }
 

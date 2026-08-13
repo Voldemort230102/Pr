@@ -21,6 +21,7 @@ html, body {
 @font-face {
     font-family: 'Space Grotesk';
     src: url('../fonts/SpaceGrotesk-Regular.woff2') format('woff2');
+    /*src: url('https://livefile.xesimg.com/programme/python_assets/e597e7eaee5120a3107bffcddbea9e05.woff2') format('woff2');*/
     font-weight: 400;
     font-display: swap;
 }
@@ -28,6 +29,7 @@ html, body {
 @font-face {
     font-family: 'Space Grotesk';
     src: url('../fonts/SpaceGrotesk-Bold.woff2') format('woff2');
+    /*src: url('https://livefile.xesimg.com/programme/python_assets/514360ed1b78e71aabe58ecd08f36706.woff2') format('woff2');*/
     font-weight: 700;
     font-display: swap;
 }
@@ -35,6 +37,7 @@ html, body {
 @font-face {
     font-family: 'Noto Serif SC';
     src: url('../fonts/NotoSerifSC-Regular.woff2') format('woff2');
+    /*src: url('https://livefile.xesimg.com/programme/python_assets/f29157434cbf83f5c2a75bf37bd76e02.woff2') format('woff2');*/
     font-weight: 400;
     font-display: swap;
 }
@@ -42,6 +45,7 @@ html, body {
 @font-face {
     font-family: 'Noto Serif SC';
     src: url('../fonts/NotoSerifSC-Bold.woff2') format('woff2');
+    /*src: url('https://livefile.xesimg.com/programme/python_assets/9d9059651c4825ddf976a255603a7297.woff2') format('woff2');*/
     font-weight: 700;
     font-display: swap;
 }
@@ -316,8 +320,7 @@ body::before {
     justify-content: flex-start;
 }
 
-.countdown-container .patronus-wrap,
-.countdown-container .snape-quote,
+.countdown-container .quote-box,
 .countdown-container .countdown-date {
     margin-top: 0;
 }
@@ -476,52 +479,55 @@ body::before {
 }
 
 /* ====================================================
-   银色牝鹿守护神（斯内普的守护神）
+   语录框
    ==================================================== */
-.patronus-wrap {
-    margin-top: clamp(2rem, 6vw, 3rem);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    opacity: 1;
+.quote-box {
+    width: fit-content;
+    max-width: min(520px, 90vw);
+    min-width: clamp(200px, 40vw, 320px);
+    background: linear-gradient(135deg,
+        rgba(90, 154, 106, 0.10) 0%,
+        rgba(192, 200, 216, 0.06) 50%,
+        rgba(10, 26, 44, 0.6) 100%);
+    border: 1px solid rgba(192, 200, 216, 0.25);
+    border-radius: 14px;
+    padding: clamp(14px, 3vw, 22px) clamp(18px, 4vw, 28px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    box-shadow:
+        0 0 24px rgba(192, 200, 216, 0.12),
+        inset 0 0 18px rgba(125, 255, 176, 0.04);
+    animation: quote-breathe 5s ease-in-out infinite;
 }
 
-.patronus-doe {
-    width: clamp(140px, 36vw, 220px);
-    height: auto;
-    border-radius: 12px;
-    filter: brightness(0.9) drop-shadow(0 0 22px var(--silver-glow)) drop-shadow(0 0 12px rgba(125, 255, 176, 0.3));
-    animation: patronus-float 6s ease-in-out infinite;
-    /* 让图片融入深色背景 */
-    mix-blend-mode: screen;
-    opacity: 1;
+@keyframes quote-breathe {
+    0%, 100% {
+        box-shadow: 0 0 24px rgba(192, 200, 216, 0.12), inset 0 0 18px rgba(125, 255, 176, 0.04);
+    }
+    50% {
+        box-shadow: 0 0 36px rgba(125, 255, 176, 0.2), inset 0 0 22px rgba(125, 255, 176, 0.08);
+    }
 }
 
-@keyframes patronus-float {
-    0%, 100% { transform: translateY(0) scale(1); opacity: 0.95; }
-    50%      { transform: translateY(-8px) scale(1.03); opacity: 1; }
-}
-
-.patronus-label {
-    font-family: var(--font-body-cn);
-    font-size: clamp(0.7rem, 2vw, 0.85rem);
-    color: var(--silver);
-    letter-spacing: 3px;
-    margin-top: 8px;
-    opacity: 0.8;
-}
-
-/* === 斯内普名言 === */
-.snape-quote {
+.quote-body {
     font-family: var(--font-display);
-    font-size: clamp(0.75rem, 2.4vw, 0.95rem);
+    font-size: clamp(0.85rem, 2.4vw, 1.05rem);
     color: var(--silver-light);
-    font-style: italic;
-    margin-top: clamp(1.5rem, 4vw, 2rem);
-    text-align: center;
-    letter-spacing: 1px;
-    opacity: 0.75;
-    line-height: 1.6;
+    line-height: 1.85;
+    white-space: pre-wrap;
+    word-break: break-word;
+    text-shadow: 0 0 6px rgba(192, 200, 216, 0.3);
+}
+
+.quote-author {
+    font-family: var(--font-body-cn);
+    font-size: clamp(0.72rem, 2vw, 0.85rem);
+    color: var(--pr-green-bright);
+    text-align: right;
+    margin-top: 12px;
+    letter-spacing: 2px;
+    opacity: 0.85;
+    text-shadow: 0 0 6px var(--pr-green-glow);
 }
 
 /* ====================================================
@@ -766,8 +772,8 @@ body::before {
     }
     .countdown-timer { gap: 6px; }
     .countdown-label { margin-bottom: 0.8rem; }
-    .patronus-wrap { margin-top: 1rem; }
-    .patronus-doe { width: 70px; }
+    .quote-box { max-width: min(400px, 80vw); padding: 10px 14px; }
+    .quote-body { font-size: clamp(0.65rem, 2.4vw, 0.75rem); }
     #phase-celebration {
         padding-top: 1rem;
     }
@@ -807,12 +813,14 @@ body::before {
         max-width: 520px;
     }
 
-    .patronus-doe {
-        width: clamp(180px, 38vw, 300px);
+    .quote-box {
+        max-width: min(560px, 80vw);
+        min-width: clamp(260px, 40vw, 380px);
+        padding: clamp(18px, 3vw, 26px) clamp(22px, 4vw, 32px);
     }
 
-    .snape-quote {
-        font-size: clamp(0.9rem, 2.6vw, 1.1rem);
+    .quote-body {
+        font-size: clamp(0.95rem, 2.8vw, 1.15rem);
     }
 
     .countdown-date {
@@ -908,21 +916,19 @@ body::before {
         font-size: clamp(0.85rem, 1.6vw, 1rem);
     }
 
-    .patronus-wrap {
-        margin-top: 0;
+    .quote-box {
+        max-width: min(640px, 60vw);
+        min-width: clamp(280px, 28vw, 400px);
+        padding: clamp(18px, 2vw, 28px) clamp(24px, 3vw, 36px);
+        border-radius: 18px;
     }
 
-    .patronus-doe {
-        width: clamp(180px, 22vw, 320px);
-        border-radius: 16px;
+    .quote-body {
+        font-size: clamp(0.95rem, 1.8vw, 1.2rem);
     }
 
-    .patronus-label {
-        font-size: clamp(0.85rem, 1.6vw, 1rem);
-    }
-
-    .snape-quote {
-        font-size: clamp(0.9rem, 1.8vw, 1.15rem);
+    .quote-author {
+        font-size: clamp(0.8rem, 1.5vw, 0.95rem);
     }
 
     .countdown-date {

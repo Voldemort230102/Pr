@@ -8,9 +8,9 @@
     // ===== 生日配置 =====
     const BIRTHDAY_YEAR = 2026;
     const BIRTHDAY_MONTH = 10; // 0-indexed: November = 10
-    //const BIRTHDAY_MONTH = 6; // 0-indexed: November = 10
+    //const BIRTHDAY_MONTH = 7; // 0-indexed: November = 10
     const BIRTHDAY_DAY = 29;
-    //const BIRTHDAY_DAY = 26;
+    //const BIRTHDAY_DAY = 11;
     const TARGET = new Date(BIRTHDAY_YEAR, BIRTHDAY_MONTH, BIRTHDAY_DAY, 0, 0, 0).getTime();
     const FADE_OUT_DELAY = 4000; // 归零后 4 秒淡出
 
@@ -72,8 +72,9 @@
             && now.getDate() === BIRTHDAY_DAY;
 
         if (isBirthdayToday) {
-            // 生日当天：显示全零，4 秒后过渡到庆祝
+            // 生日当天：显示全零，进度条 100%，4 秒后过渡到庆祝
             setAllZeros();
+            updateProgress();
             setTimeout(() => {
                 if (window.Transition) window.Transition.playTransition();
             }, FADE_OUT_DELAY);
@@ -81,13 +82,13 @@
         }
 
         // 判断是否已过生日（非当天，比如第二天及以后打开）
-        // 注意：当前是 2026-07，生日还没到，此分支理论上不会触发，但保留健壮性
         if (now.getTime() > TARGET
             && !(now.getFullYear() === BIRTHDAY_YEAR
                  && now.getMonth() === BIRTHDAY_MONTH
                  && now.getDate() === BIRTHDAY_DAY)) {
             // 已过生日，直接显示庆祝页
             setAllZeros();
+            updateProgress();
             setTimeout(() => {
                 if (window.Transition) window.Transition.showCelebrationDirectly();
             }, 1500);
@@ -122,6 +123,24 @@
             }
             updateProgress();
         }, 50);
+    }
+
+    // ===== 语录显示 =====
+    function displayRandomQuote() {
+        if (!window.QuoteRotator) return;
+        const quote = window.QuoteRotator.next();
+        const bodyEl = document.getElementById('quote-body');
+        const authorEl = document.getElementById('quote-author');
+        if (bodyEl) bodyEl.textContent = quote[0];
+        if (authorEl) {
+            if (quote[1]) {
+                authorEl.textContent = '—— ' + quote[1];
+                authorEl.style.display = '';
+            } else {
+                authorEl.textContent = '';
+                authorEl.style.display = 'none';
+            }
+        }
     }
 
     // ===== 交互事件 =====
@@ -168,6 +187,11 @@
     function init() {
         initCountdown();
         bindInteractions();
+        // 初始化语录显示
+        if (window.QuoteRotator) {
+            window.QuoteRotator.init();
+            displayRandomQuote();
+        }
     }
 
     if (document.readyState === 'loading') {
