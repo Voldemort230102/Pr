@@ -7,10 +7,10 @@
 
     // ===== 生日配置 =====
     const BIRTHDAY_YEAR = 2026;
-    // const BIRTHDAY_MONTH = 10; // 0-indexed: November = 10
-    const BIRTHDAY_MONTH = 7; // 0-indexed: November = 10
-    // const BIRTHDAY_DAY = 29;
-    const BIRTHDAY_DAY = 14;
+    const BIRTHDAY_MONTH = 10; // 0-indexed: November = 10
+    // const BIRTHDAY_MONTH = 7; // 0-indexed: November = 10
+    const BIRTHDAY_DAY = 29;
+    // const BIRTHDAY_DAY = 14;
     const TARGET = new Date(BIRTHDAY_YEAR, BIRTHDAY_MONTH, BIRTHDAY_DAY, 0, 0, 0).getTime();
     const FADE_OUT_DELAY = 4000; // 归零后 4 秒淡出
 
